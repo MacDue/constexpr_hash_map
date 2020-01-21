@@ -182,7 +182,7 @@ const unsigned int allowedNumColl = 2, int cur = 0, int numCollision = 0) {
 }
 
 template<class Arr>
-constexpr unsigned int 
+constexpr unsigned int
     findSmallestBSize (const Arr arr, const unsigned int bucketSize) {
     return check_collision(arr, bucketSize) ? bucketSize :
         check_collision(arr, bucketSize + 31);
@@ -260,15 +260,15 @@ HWithArr(int N, const unsigned int bucket, const T t, const T2 mini,
           : HWithArr<D, T2>(N+1, bucket,  t, u0,   u..., mini);
 }
 
-template<class T3, class ...U> 
+template<class T3, class ...U>
 //constexpr std::array<T3, sizeof...(U)>
 constexpr unsigned int
 findMinBSize(unsigned int bucket, U... u)
 {
     return check_collision(HWithArr<sizeof...(U), T3>
-    (0, bucket, std::array<T3, 0>(), u...), bucket) 
-    ? bucket 
-    : findMinBSize<T3>(bucket + B_INCREMENTOR, u...); 
+    (0, bucket, std::array<T3, 0>(), u...), bucket)
+    ? bucket
+    : findMinBSize<T3>(bucket + B_INCREMENTOR, u...);
 }
 
 
@@ -381,7 +381,7 @@ template<int bucketSize, class _Pair>
 struct StaticHashMap {
     // Pair for the hashmap
     typedef typename _Pair::key_type TKey;
-    typedef typename _Pair::value_type T2; 
+    typedef typename _Pair::value_type T2;
 
     // constructor
     template<class...U>
@@ -415,7 +415,7 @@ struct StaticHashMap {
         // return HArr<sizeof...(U), T3>(0,bucket, std::make_tuple(),u...);
         return HWithArr<sizeof...(U), T3>(0, bucket, std::array<T3, 0>(), u...);
     }
-    constexpr T2 get(TKey key) {
+    constexpr T2 get(TKey key) const {
         // if m_hash_lvl1[hash(key)].first == key
         //  return  m_hash_lvl1[hash(key)].second;
         // else if m_hash_lvl2[hash(key)].first == key
@@ -441,7 +441,7 @@ struct StaticHashMap {
         while(*key != '\0')
         {
             hash *= 16777619;
-            hash ^= *key; 
+            hash ^= *key;
             key++;
         }
         hash = hash % bucketSize;
@@ -451,6 +451,8 @@ struct StaticHashMap {
         if(strcmp(key1, first) == 0)
             return m_hash_lvl1[hash].second;
         TKey second = m_hash_lvl2[hash].first;
+        if(second == NULL)
+            return T2();
         if(strcmp(key1, second) == 0)
             return m_hash_lvl2[hash].second;
         return T2();
